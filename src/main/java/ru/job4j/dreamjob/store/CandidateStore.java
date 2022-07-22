@@ -13,12 +13,9 @@ public class CandidateStore {
     private final Map<Integer, Candidate> candidates = new ConcurrentHashMap<>();
 
     private CandidateStore() {
-        candidates.put(1, new Candidate(1, "Jon",
-                "Junior developer", "11.04.22"));
-        candidates.put(2, new Candidate(2, "Martin",
-                "Middle developer", "14.07.22"));
-        candidates.put(3, new Candidate(3, "Den",
-                "Senior developer", "20.07.22"));
+        candidates.put(1, new Candidate("Jon", "Junior developer"));
+        candidates.put(2, new Candidate("Martin", "Middle developer"));
+        candidates.put(3, new Candidate("Den", "Senior developer"));
     }
 
     public static CandidateStore instOf() {

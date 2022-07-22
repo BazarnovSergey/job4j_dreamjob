@@ -1,22 +1,26 @@
 package ru.job4j.dreamjob.model;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 public class Post {
 
-    private int id;
+    private int id = count++;
     private String name;
     private String description;
     private String created;
+    private static int count = 1;
+    private static final DateTimeFormatter FORMATTER
+            = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
 
     public Post() {
     }
 
-    public Post(int id, String name, String description, String created) {
-        this.id = id;
+    public Post(String name, String description) {
         this.name = name;
         this.description = description;
-        this.created = created;
+        this.created = LocalDateTime.now().format(FORMATTER);
     }
 
     public int getId() {

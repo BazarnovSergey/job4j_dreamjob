@@ -19,8 +19,8 @@ public class PostController {
 
     @GetMapping("/formAddPost")
     public String addPost(Model model) {
-        model.addAttribute("post", new Post(0, "Заполните поле",
-                "Описание", "Дата"));
+        model.addAttribute("post", new Post("Заполните поле",
+                "Описание"));
         return "addPost";
     }
 }
