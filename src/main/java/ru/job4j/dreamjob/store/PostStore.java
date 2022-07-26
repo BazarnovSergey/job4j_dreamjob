@@ -35,9 +35,7 @@ public class PostStore {
     }
 
     public void update(Post post) {
-        if (posts.containsKey(post.getId())) {
-            posts.put(post.getId(), post);
-        }
+        posts.replace(post.getId(), post);
     }
 
 }
