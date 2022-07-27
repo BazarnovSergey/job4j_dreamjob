@@ -7,16 +7,16 @@ public class Candidate {
 
     private int id;
     private String name;
-    private String desc;
+    private String description;
     private LocalDateTime created = LocalDateTime.now();
 
     public Candidate() {
     }
 
-    public Candidate(int id, String name, String desc) {
+    public Candidate(int id, String name, String description) {
         this.id = id;
         this.name = name;
-        this.desc = desc;
+        this.description = description;
     }
 
     public int getId() {
@@ -35,12 +35,12 @@ public class Candidate {
         this.name = name;
     }
 
-    public String getDesc() {
-        return desc;
+    public String getDescription() {
+        return description;
     }
 
-    public void setDesc(String desc) {
-        this.desc = desc;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public LocalDateTime getCreated() {
@@ -60,15 +60,12 @@ public class Candidate {
             return false;
         }
         Candidate candidate = (Candidate) o;
-        return id == candidate.id && Objects.equals(name, candidate.name)
-                && Objects.equals(desc, candidate.desc)
-                && Objects.equals(created, candidate.created);
+        return id == candidate.id;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, desc, created);
+        return Objects.hash(id);
     }
-
 
 }
