@@ -1,22 +1,18 @@
 package ru.job4j.dreamjob.service;
 
+import org.springframework.stereotype.Service;
 import ru.job4j.dreamjob.model.Post;
 import ru.job4j.dreamjob.store.PostStore;
 
 import java.util.Collection;
 
+@Service
 public class PostService {
 
-    private static final PostService INSTANCE = new PostService();
+    private final PostStore postStore;
 
-    private final PostStore postStore = PostStore.instOf();
-
-    private PostService() {
-
-    }
-
-    public static PostService getInstance() {
-          return INSTANCE;
+    public PostService(PostStore postStore) {
+        this.postStore = postStore;
     }
 
     public Post findById(int id) {
@@ -34,4 +30,5 @@ public class PostService {
     public void update(Post post) {
         postStore.update(post);
     }
+
 }
