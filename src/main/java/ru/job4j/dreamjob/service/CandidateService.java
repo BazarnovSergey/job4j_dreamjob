@@ -33,4 +33,7 @@ public class CandidateService {
         candidateStore.update(candidate);
     }
 
+    public Candidate getById(Integer candidateId) {
+        return findById(candidateId);
+    }
 }
