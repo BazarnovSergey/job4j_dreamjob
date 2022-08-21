@@ -49,12 +49,10 @@
                         <input type="hidden" name="id" value="0"/>
                         <label for="name">Название вакансии</label> <br>
                         <input type="text" class="form-control" name="name" id="name">
+                    </div>
+                    <div class="form-group">
                         <label for="name">Описание</label> <br>
                         <input type="text" class="form-control" name="description" id="description">
-                    </div>
-                    <div class="form-check">
-                        <input type="checkbox" name="visible" class="form-check-input" id="visible">
-                        <label class="form-check-label" for="visible">Опубликовать</label>
                     </div>
                     <div class="form-group">
                         <label for="city.id">Город</label>
@@ -62,7 +60,15 @@
                             <option th:each="city : ${cities}" th:value="${city.id}" th:text="${city.name}"></option>
                         </select>
                     </div>
-                    <button type="submit" class="btn btn-primary">Сохранить</button>
+                    <div class="form-check">
+                        <input type="checkbox" name="visible" class="form-check-input" id="visible">
+                        <div class="form-group">
+                            <label class="form-check-label" for="visible">Опубликовать</label>
+                        </div>
+                    </div>
+                    <div>
+                        <button type="submit" class="btn btn-primary">Сохранить</button>
+                    </div>
                 </form>
             </div>
         </div>
