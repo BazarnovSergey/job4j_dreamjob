@@ -30,7 +30,7 @@ public class PostService {
                         cityService.findById(post.getCity().getId())
                 )
         );
-        return postDBStore.findAll();
+        return posts;
     }
 
     public void add(Post post) {
