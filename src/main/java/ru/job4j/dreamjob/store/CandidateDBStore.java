@@ -4,8 +4,7 @@ import org.apache.commons.dbcp2.BasicDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
-import ru.job4j.dreamjob.model.Post;
-import ru.job4j.dreamjob.service.CityService;
+import ru.job4j.dreamjob.model.Candidate;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -16,90 +15,86 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-public class PostDBStore {
+public class CandidateDBStore {
 
     private final BasicDataSource pool;
 
-    public PostDBStore(BasicDataSource pool) {
+    public CandidateDBStore(BasicDataSource pool) {
         this.pool = pool;
     }
 
-    private static final Logger LOG = LoggerFactory.getLogger(PostDBStore.class.getName());
+    private static final Logger LOG = LoggerFactory.getLogger(CandidateDBStore.class.getName());
 
-    public List<Post> findAll() {
-        List<Post> posts = new ArrayList<>();
+    public List<Candidate> findAll() {
+        List<Candidate> candidates = new ArrayList<>();
         try (Connection cn = pool.getConnection();
-             PreparedStatement ps = cn.prepareStatement("SELECT * FROM post")
+             PreparedStatement ps = cn.prepareStatement("SELECT * FROM candidate")
         ) {
             try (ResultSet it = ps.executeQuery()) {
                 while (it.next()) {
-                    posts.add(new Post(it.getInt("id"),
+                    candidates.add(new Candidate(it.getInt("id"),
                             it.getString("name"),
                             it.getString("description"),
-                            it.getBoolean("visible"),
                             it.getObject("created", LocalDateTime.class),
-                            new CityService().findById(it.getInt("city_id")))
+                            it.getBytes("photo"))
                     );
                 }
             }
         } catch (Exception e) {
             LOG.error("exception: ", e);
         }
-        return posts;
+        return candidates;
     }
 
-    public Post add(Post post) {
+    public Candidate add(Candidate candidate) {
         try (Connection cn = pool.getConnection();
              PreparedStatement ps = cn.prepareStatement(
-                     "INSERT INTO post(name,description,visible,created,city_id ) VALUES (?,?,?,?,?)")
+                     "INSERT INTO candidate(name,description,created,photo ) VALUES (?,?,?,?)",
+                     PreparedStatement.RETURN_GENERATED_KEYS)
         ) {
-            ps.setString(1, post.getName());
-            ps.setString(2, post.getDescription());
-            ps.setBoolean(3, post.isVisible());
-            ps.setTimestamp(4, Timestamp.valueOf(post.getCreated()));
-            ps.setInt(5, post.getCity().getId());
+            ps.setString(1, candidate.getName());
+            ps.setString(2, candidate.getDescription());
+            ps.setTimestamp(3, Timestamp.valueOf(candidate.getCreated()));
+            ps.setBytes(4, candidate.getPhoto());
             ps.execute();
             try (ResultSet id = ps.getGeneratedKeys()) {
                 if (id.next()) {
-                    post.setId(id.getInt(1));
+                    candidate.setId(id.getInt(1));
                 }
             }
         } catch (Exception e) {
             LOG.error("exception: ", e);
         }
-        return post;
+        return candidate;
     }
 
-    public void update(Post post) {
+    public void update(Candidate candidate) {
         try (Connection cn = pool.getConnection();
              PreparedStatement ps = cn.prepareStatement(
-                     "UPDATE post SET name = ?, description = ?, visible = ?, city_id = ? WHERE id = ?",
-                     PreparedStatement.RETURN_GENERATED_KEYS)
+                     "UPDATE candidate SET name = ?, description = ?, photo = ? WHERE id = ?")
         ) {
-            ps.setString(1, post.getName());
-            ps.setString(2, post.getDescription());
-            ps.setBoolean(3, post.isVisible());
-            ps.setInt(4, post.getCity().getId());
-            ps.setInt(5, post.getId());
+            ps.setString(1, candidate.getName());
+            ps.setString(2, candidate.getDescription());
+            ps.setBytes(3, candidate.getPhoto());
+            ps.setInt(4, candidate.getId());
             ps.execute();
         } catch (Exception e) {
             LOG.error("exception: ", e);
         }
     }
 
-    public Post findById(int id) {
+    public Candidate findById(int id) {
         try (Connection cn = pool.getConnection();
-             PreparedStatement ps = cn.prepareStatement("SELECT * FROM post WHERE id = ?")
+             PreparedStatement ps = cn.prepareStatement("SELECT * FROM candidate WHERE id = ?")
         ) {
             ps.setInt(1, id);
             try (ResultSet it = ps.executeQuery()) {
                 if (it.next()) {
-                    return new Post(it.getInt("id"),
+                    return new Candidate(it.getInt("id"),
                             it.getString("name"),
                             it.getString("description"),
-                            it.getBoolean("visible"),
                             it.getObject("created", LocalDateTime.class),
-                            new CityService().findById(it.getInt("city_id")));
+                            it.getBytes("photo"));
                 }
             }
         } catch (Exception e) {
