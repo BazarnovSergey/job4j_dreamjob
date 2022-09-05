@@ -1,7 +1,8 @@
-CREATE TABLE candidate (
+CREATE TABLE if not exists post (
    id SERIAL PRIMARY KEY,
    name TEXT,
    description TEXT,
+   visible boolean,
    created timestamp,
-   photo bytea
+   city_id int
 );

@@ -37,7 +37,7 @@ public class UserDBStore {
                     user.setId(id.getInt(1));
                 }
             }
-            result = Optional.ofNullable(user);
+            result = Optional.of(user);
         } catch (Exception e) {
             LOG.error("exception: ", e);
         }
