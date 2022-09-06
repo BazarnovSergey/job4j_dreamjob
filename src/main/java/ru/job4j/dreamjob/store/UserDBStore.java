@@ -45,7 +45,6 @@ public class UserDBStore {
     }
 
     public Optional<User> findUserByEmailAndPwd(String email, String password) {
-        Optional<User> rsl = Optional.empty();
         try (Connection cn = pool.getConnection();
              PreparedStatement ps = cn.prepareStatement(
                      "SELECT * FROM users WHERE email = ? AND password = ? ")
@@ -54,17 +53,16 @@ public class UserDBStore {
             ps.setString(2, password);
             try (ResultSet it = ps.executeQuery()) {
                 if (it.next()) {
-                    rsl = Optional.of(new User(
+                    return Optional.of(new User(
                             it.getInt("id"),
                             it.getString("name"),
                             it.getString("email"),
                             it.getString("password")));
-                    return rsl;
                 }
             }
         } catch (Exception e) {
             LOG.error("exception: ", e);
         }
-        return rsl;
+        return Optional.empty();
     }
 }
