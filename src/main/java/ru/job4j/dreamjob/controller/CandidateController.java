@@ -11,11 +11,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.job4j.dreamjob.model.Candidate;
-import ru.job4j.dreamjob.model.User;
 import ru.job4j.dreamjob.service.CandidateService;
 
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+
+import static ru.job4j.dreamjob.util.CheckHttpSession.checkUserAuthorization;
 
 @ThreadSafe
 @Controller
@@ -30,23 +31,13 @@ public class CandidateController {
     @GetMapping("/candidates")
     public String candidates(Model model, HttpSession session) {
         model.addAttribute("candidates", candidateService.findAll());
-        User user = (User) session.getAttribute("user");
-        if (user == null) {
-            user = new User();
-            user.setName("Гость");
-        }
-        model.addAttribute("user", user);
+        checkUserAuthorization(model, session);
         return "candidates";
     }
 
     @GetMapping("/formAddCandidate")
     public String formAddPost(Model model, HttpSession session) {
-        User user = (User) session.getAttribute("user");
-        if (user == null) {
-            user = new User();
-            user.setName("Гость");
-        }
-        model.addAttribute("user", user);
+        checkUserAuthorization(model, session);
         return "addCandidate";
     }
 
@@ -62,12 +53,7 @@ public class CandidateController {
     public String formUpdateCandidate(
             Model model, @PathVariable("candidateId") int id, HttpSession session) {
         model.addAttribute("candidate", candidateService.findById(id));
-        User user = (User) session.getAttribute("user");
-        if (user == null) {
-            user = new User();
-            user.setName("Гость");
-        }
-        model.addAttribute("user", user);
+        checkUserAuthorization(model, session);
         return "updateCandidate";
     }
 
